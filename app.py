@@ -12,12 +12,19 @@ class Order(BaseModel):
     status: str  
 
 
-repo = []
-
+repo = [
+    Order(
+        number = 1,
+        startDate = "2024-12-05",
+        device = "123",
+        problemtype = "123",
+        description = "123",
+        client = "123",
+        status = "в ожидании"
+    )
+]
 app = FastAPI()
- 
 
-
-@app.get("/")
-def read_root():
-    return "hello"
+@app.get("/orders")
+def get_orders():
+    return repo
