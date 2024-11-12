@@ -12,6 +12,8 @@ class Order(BaseModel):
     status: str  
 
 
+repo = []
+
 app = FastAPI()
  
 
