@@ -8,12 +8,12 @@ class Order(BaseModel):
     number: int
     startDate: datetime.date
     device: str
-    problemType: str
+    problemtype: str
     description: str
     client: str
     status: str 
-    master: Optional[str] = "Не назначен"
     endDate: Optional[datetime.date] = None
+    master: Optional[str] = "Не назначен"
     comments: Optional[list] = []
 
 class UpdateOrderDTO(BaseModel):
@@ -27,27 +27,27 @@ class UpdateOrderDTO(BaseModel):
 repo = [
     Order(
     number = 1,
-    startDate = "2024-12-05",
+    startDate = "2020-10-05",
     device = "123",
-    problemType = "123",
+    problemtype = "123",
     description = "123",
     client = "123",
     status = "в ожидании"
     ),
     Order(
     number = 2,
-    startDate = "2024-12-05",
+    startDate = "2020-12-05",
     device = "123",
-    problemType = "123",
+    problemtype = "123",
     description = "123",
     client = "123",
     status = "в ожидании"
     ),
     Order(
     number = 3,
-    startDate = "2024-12-05",
+    startDate = "2020-11-05",
     device = "123",
-    problemType = "123",
+    problemtype = "123",
     description = "123",
     client = "123",
     status = "в ожидании"
@@ -98,22 +98,21 @@ def update_order(dto: Annotated[UpdateOrderDTO , Form()]):
     return "Не найдено"
 
 def complete_count():
-    a = [o for o in repo if o.status == "выполнено"]
-    return len(a)
+    return len([o for o in repo if o.status == "выполнено"])
 
 def get_problem_type_stat():
     dict = {}
     for o in repo:
-        if o.problemType in dict.keys():
-            dict[o.problemType] += 1
+        if o.problemtype in dict.keys():
+            dict[o.problemtype] += 1
         else:
-            dict[o.problemType] = 1
-        return dict
+            dict[o.problemtype] = 1
+    return dict
 
 def get_average_time_to_complete():
-    times = [(
-        datetime.datetime(o.endDate.year,o.endDate.month,o.endDate.day) -
-        datetime.datetime(o.startDate.year,o.startDate.month,o.startDate.day)).days
+    times = [
+        datetime.datetime.fromisoformat(o.endDate.isoformat()) -
+        datetime.datetime.fromisoformat(o.startDate.isoformat()).days
                  for o in repo 
                  if o.status == "выполнено"]
     if complete_count() != 0:
@@ -124,4 +123,4 @@ def get_statistics():
     return {
         "complete_count": complete_count(),
         "problem_type_stat": get_problem_type_stat(),
-        "get_average_time_to_complete": get_average_time_to_complete}
+        "average_time_to_complete": get_average_time_to_complete}
